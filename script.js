@@ -1,51 +1,12 @@
 // Portfolio data
 const portfolioProjects = [
-    {
-        id: 1,
-        title: "Spotlyt",
-        category: "Reward & Survey App",
-        description: "Spotlyt connects clients and users, enabling task completion for rewards through surveys, videos, and more.",
-        image: "https://play-lh.googleusercontent.com/1QwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw=w600-h300-rw",
-        technologies: ["Flutter", "Firebase", "Play Store"],
-        playStore: "https://play.google.com/store/apps/details?id=com.spotlyt.co.za",
-        appStore: ""
-    },
-    {
-        id: 2,
-        title: "Elevate Daily",
-        category: "Motivational Quotes App",
-        description: "Get daily motivational quotes tailored to your mood, inspiring and uplifting you every day.",
-        image: "https://play-lh.googleusercontent.com/2QwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw=w600-h300-rw",
-        technologies: ["Flutter", "Play Store"],
-        playStore: "https://play.google.com/store/apps/details?id=com.tst_elevatedaily",
-        appStore: ""
-    },
-    {
-        id: 3,
-        title: "Small Bore SA",
-        category: "Sports & Shooting",
-        description: "A mobile app for the South African small bore shooting community.",
-        image: "https://play-lh.googleusercontent.com/3QwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw=w600-h300-rw",
-        technologies: ["Flutter", "Play Store", "App Store"],
-        playStore: "https://play.google.com/store/apps/details?id=com.arnold.techaimshooting",
-        appStore: "https://apps.apple.com/us/app/small-bore-sa/id6505028401"
-    },
-    {
-        id: 4,
-        title: "Valentines Pro Service",
-        category: "Service Management",
-        description: "Pool cleaning, remodeling, and service assignment for employees and managers.",
-        image: "https://play-lh.googleusercontent.com/4QwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw=w600-h300-rw",
-        technologies: ["Flutter", "Play Store", "App Store"],
-        playStore: "https://play.google.com/store/apps/details?id=com.valentines_pool.app",
-        appStore: "https://apps.apple.com/us/app/valentines-pro-service/id6739955728"
-    },
+
     {
         id: 5,
         title: "Medroof UC And SPA",
         category: "Healthcare & Doctor Finder",
         description: "Find first aid, book doctor appointments, and get emergency help. Doctors provide services by category.",
-        image: "https://play-lh.googleusercontent.com/5QwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw=w600-h300-rw",
+        image: "assets/medroof.png",
         technologies: ["Flutter", "Firebase", "Play Store", "App Store"],
         playStore: "https://play.google.com/store/apps/details?id=com.ucspa.medroof",
         appStore: "https://apps.apple.com/us/app/medroof-uc-and-spa/id6739805332"
@@ -55,10 +16,40 @@ const portfolioProjects = [
         title: "Vibez Lightlife",
         category: "Nightlife & Events",
         description: "Discover and connect with nightlife events and venues.",
-        image: "https://play-lh.googleusercontent.com/6QwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw=w600-h300-rw",
+        image: "assets/vibez.png",
         technologies: ["Flutter", "Play Store", "App Store"],
         playStore: "https://play.google.com/store/apps/details?id=com.vibez.vibeznightlife&hl=en",
         appStore: "https://apps.apple.com/us/app/vibez-nightlife/id6743194265"
+    },
+        {
+        id: 2,
+        title: "Elevate Daily",
+        category: "Motivational Quotes App",
+        description: "Get daily motivational quotes tailored to your mood, inspiring and uplifting you every day.",
+        image: "assets/elevate.png",
+        technologies: ["Flutter", "Play Store"],
+        playStore: "https://play.google.com/store/apps/details?id=com.tst_elevatedaily",
+        appStore: ""
+    },
+    {
+        id: 3,
+        title: "Small Bore SA",
+        category: "Sports & Shooting",
+        description: "A mobile app for the South African small bore shooting community.",
+        image: "assets/shooter.png",
+        technologies: ["Flutter", "Play Store", "App Store"],
+        playStore: "https://play.google.com/store/apps/details?id=com.arnold.techaimshooting",
+        appStore: "https://apps.apple.com/us/app/small-bore-sa/id6505028401"
+    },
+    {
+        id: 4,
+        title: "Valentines Pro Service",
+        category: "Service Management",
+        description: "Pool cleaning, remodeling, and service assignment for employees and managers.",
+        image: "assets/valentines.png",
+        technologies: ["Flutter", "Play Store", "App Store"],
+        playStore: "https://play.google.com/store/apps/details?id=com.valentines_pool.app",
+        appStore: "https://apps.apple.com/us/app/valentines-pro-service/id6739955728"
     }
 ];
 
