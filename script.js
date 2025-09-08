@@ -1,462 +1,824 @@
-// Portfolio data
-const portfolioProjects = [
+// Global variables
+let isScrolling = false;
+const particles = [];
+const maxParticles = 50;
 
-    {
-        id: 5,
-        title: "Medroof UC And SPA",
-        category: "Healthcare & Doctor Finder",
-        description: "Find first aid, book doctor appointments, and get emergency help. Doctors provide services by category.",
-        image: "assets/medroof.png",
-        technologies: ["Flutter", "Firebase", "Play Store", "App Store"],
-        playStore: "https://play.google.com/store/apps/details?id=com.ucspa.medroof",
-        appStore: "https://apps.apple.com/us/app/medroof-uc-and-spa/id6739805332"
-    },
-    {
-        id: 6,
-        title: "Vibez Lightlife",
-        category: "Nightlife & Events",
-        description: "Discover and connect with nightlife events and venues.",
-        image: "assets/vibez.png",
-        technologies: ["Flutter", "Play Store", "App Store"],
-        playStore: "https://play.google.com/store/apps/details?id=com.vibez.vibeznightlife&hl=en",
-        appStore: "https://apps.apple.com/us/app/vibez-nightlife/id6743194265"
-    },
-        {
-        id: 2,
-        title: "Elevate Daily",
-        category: "Motivational Quotes App",
-        description: "Get daily motivational quotes tailored to your mood, inspiring and uplifting you every day.",
-        image: "assets/elevate.png",
-        technologies: ["Flutter", "Play Store"],
-        playStore: "https://play.google.com/store/apps/details?id=com.tst_elevatedaily",
-        appStore: ""
-    },
-    {
-        id: 3,
-        title: "Small Bore SA",
-        category: "Sports & Shooting",
-        description: "A mobile app for the South African small bore shooting community.",
-        image: "assets/shooter.png",
-        technologies: ["Flutter", "Play Store", "App Store"],
-        playStore: "https://play.google.com/store/apps/details?id=com.arnold.techaimshooting",
-        appStore: "https://apps.apple.com/us/app/small-bore-sa/id6505028401"
-    },
-    {
-        id: 4,
-        title: "Valentines Pro Service",
-        category: "Service Management",
-        description: "Pool cleaning, remodeling, and service assignment for employees and managers.",
-        image: "assets/valentines.png",
-        technologies: ["Flutter", "Play Store", "App Store"],
-        playStore: "https://play.google.com/store/apps/details?id=com.valentines_pool.app",
-        appStore: "https://apps.apple.com/us/app/valentines-pro-service/id6739955728"
-    }
-];
-
-// DOM elements
-let selectedProject = null;
-
-// Initialize the website
+// Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    initializePortfolio();
-    initializeScrollEffects();
-    initializeMobileMenu();
-    initializeContactForm();
-    setCurrentYear();
-    initializeAnimations();
-    initializeHeroMicroInteractions();
+    initLoadingScreen();
+    initNavigation();
+    initParticles();
+    initScrollAnimations();
+    initSkillCircles();
+    initProjectFilters();
+    initContactForm();
+    initTypingAnimation();
+    initSmoothScrolling();
+    initAdvancedAnimations();
 });
 
-// mark site as loaded after full load to trigger entrance animations
-window.addEventListener('load', function() {
-    try { document.body.classList.add('site-loaded'); } catch (e) { /* noop */ }
-});
-
-// Small hero micro-interactions: tilt mockup and nav highlight
-function initializeHeroMicroInteractions() {
-    // tilt for mockup card (subtle 3D on mouse move)
-    const mockup = document.querySelector('.mockup-card .device-frame');
-    if (mockup) {
-        mockup.addEventListener('mousemove', (e) => {
-            const rect = mockup.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
-            const rotateX = (y * 6).toFixed(2);
-            const rotateY = (x * -10).toFixed(2);
-            mockup.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(0)`;
-        });
-
-        mockup.addEventListener('mouseleave', () => {
-            mockup.style.transform = '';
-        });
-    }
-
-    // reveal floating badges with stagger
-    const floats = document.querySelectorAll('.mockup-card .floating-card');
-    floats.forEach((f, i) => {
-        try {
-            f.style.opacity = '0';
-            const current = window.getComputedStyle(f).transform;
-            f.style.transform = (current === 'none' ? '' : current) + ' translateY(6px)';
+// Loading Screen
+function initLoadingScreen() {
+    const loadingScreen = document.getElementById('loading-screen');
+    const progressBar = document.querySelector('.progress-bar::after');
+    
+    // Simulate loading progress
+    let progress = 0;
+    const loadingInterval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(loadingInterval);
+            
+            // Hide loading screen after a short delay
             setTimeout(() => {
-                f.style.transition = 'all 420ms cubic-bezier(.2,.9,.2,1)';
-                f.style.opacity = '1';
-                f.style.transform = (f.style.transform || '').replace(' translateY(6px)', '');
-            }, 220 + i * 120);
-        } catch (err) {
-            // ignore if styles can't be applied
+                loadingScreen.classList.add('hidden');
+                document.body.style.overflow = 'visible';
+                
+                // Start entrance animations
+                startEntranceAnimations();
+            }, 500);
+        }
+    }, 150);
+    
+    // Hide loading screen after maximum 3 seconds
+    setTimeout(() => {
+        if (!loadingScreen.classList.contains('hidden')) {
+            loadingScreen.classList.add('hidden');
+            document.body.style.overflow = 'visible';
+            startEntranceAnimations();
+        }
+    }, 3000);
+}
+
+// Entrance animations after loading
+function startEntranceAnimations() {
+    // Animate navbar
+    const navbar = document.querySelector('.navbar');
+    navbar.style.animation = 'slideDown 0.8s ease-out';
+    
+    // Animate hero content with stagger
+    const heroElements = document.querySelectorAll('.hero-content > *');
+    heroElements.forEach((el, index) => {
+        el.style.animationDelay = `${0.2 + index * 0.1}s`;
+        el.classList.add('animate-in');
+    });
+    
+    // Animate hero visual
+    const heroVisual = document.querySelector('.hero-visual');
+    heroVisual.style.animationDelay = '0.5s';
+    heroVisual.classList.add('animate-in');
+}
+
+// Navigation functionality
+function initNavigation() {
+    const navbar = document.querySelector('.navbar');
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+            navbar.style.background = 'rgba(10, 10, 15, 0.95)';
+            navbar.style.backdropFilter = 'blur(20px)';
+        } else {
+            navbar.style.background = 'rgba(10, 10, 15, 0.9)';
         }
     });
 
-    // nav active highlighting on scroll
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = Array.from(document.querySelectorAll('.nav-link'));
-    function onScroll() {
-        const scrollPos = window.scrollY + 120;
-        sections.forEach(section => {
-            if (section.offsetTop <= scrollPos && (section.offsetTop + section.offsetHeight) > scrollPos) {
-                navLinks.forEach(l => l.classList.remove('active'));
-                const link = navLinks.find(l => l.getAttribute('onclick') && l.getAttribute('onclick').includes(`'${section.id}'`));
-                if (link) link.classList.add('active');
-            }
+    // Mobile menu toggle
+    if (hamburger) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
         });
     }
-    window.addEventListener('scroll', onScroll);
-    onScroll();
+
+    // Close mobile menu when clicking on a link
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger?.classList.remove('active');
+            navMenu?.classList.remove('active');
+        });
+    });
 }
- 
-// Portfolio initialization
-function initializePortfolio() {
-    const portfolioGrid = document.getElementById('portfolio-grid');
-    
-    portfolioProjects.forEach(project => {
-        const projectElement = document.createElement('div');
-        projectElement.className = 'portfolio-item group cursor-pointer';
-        projectElement.onclick = () => openModal(project.id);
+
+// Particle system
+function initParticles() {
+    const particlesContainer = document.getElementById('particles');
+    if (!particlesContainer) return;
+
+    function createParticle() {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
         
-        projectElement.innerHTML = `
-            <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
-                <div class="relative overflow-hidden">
-                    <img 
-                        src="${project.image}" 
-                        alt="${project.title}"
-                        class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                        </svg>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <div class="text-sm text-teal-600 font-medium mb-2">${project.category}</div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3">${project.title}</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed mb-4">${project.description.substring(0, 120)}...</p>
-                    <div class="flex flex-wrap gap-2">
-                        ${project.technologies.slice(0, 2).map(tech => 
-                            `<span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">${tech}</span>`
-                        ).join('')}
-                    </div>
-                </div>
-            </div>
+        const startX = Math.random() * window.innerWidth;
+        const endX = startX + (Math.random() - 0.5) * 200;
+        const duration = 8 + Math.random() * 4;
+        const delay = Math.random() * 2;
+        const size = 2 + Math.random() * 4;
+        
+        particle.style.left = startX + 'px';
+        particle.style.animationDuration = duration + 's';
+        particle.style.animationDelay = delay + 's';
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        
+        // Random colors
+        const colors = ['#40D9FF', '#FF6B35', '#7C3AED', '#10B981', '#F59E0B'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.background = randomColor;
+        particle.style.boxShadow = `0 0 10px ${randomColor}`;
+        
+        // Random shapes
+        if (Math.random() > 0.7) {
+            particle.style.borderRadius = '0';
+            particle.style.transform = 'rotate(45deg)';
+        }
+        
+        particlesContainer.appendChild(particle);
+        
+        // Remove particle after animation
+        setTimeout(() => {
+            if (particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+            }
+        }, (duration + delay) * 1000);
+    }
+
+    // Create initial particles
+    for (let i = 0; i < maxParticles; i++) {
+        setTimeout(() => createParticle(), Math.random() * 5000);
+    }
+
+    // Continuously create new particles
+    setInterval(createParticle, 500);
+    
+    // Create special floating code symbols
+    createFloatingSymbols();
+}
+
+// Floating code symbols
+function createFloatingSymbols() {
+    const symbols = ['{ }', '< />', '( )', '[ ]', '=>', '&&', '||', '++'];
+    const container = document.getElementById('particles');
+    
+    function createSymbol() {
+        const symbol = document.createElement('div');
+        symbol.className = 'floating-symbol';
+        symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        
+        symbol.style.cssText = `
+            position: absolute;
+            font-family: var(--font-code);
+            font-size: ${12 + Math.random() * 8}px;
+            color: rgba(64, 217, 255, 0.3);
+            pointer-events: none;
+            left: ${Math.random() * window.innerWidth}px;
+            top: ${window.innerHeight + 50}px;
+            animation: symbolFloat ${15 + Math.random() * 10}s linear infinite;
+            z-index: 1;
         `;
         
-        portfolioGrid.appendChild(projectElement);
-    });
-}
-
-// Scroll effects
-function initializeScrollEffects() {
-    const header = document.getElementById('header');
-    
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-            header.classList.add('header-scrolled');
-        } else {
-            header.classList.remove('header-scrolled');
-        }
-    });
-}
-
-// Mobile menu functionality
-function initializeMobileMenu() {
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const menuIcon = document.getElementById('menu-icon');
-    const closeIcon = document.getElementById('close-icon');
-    
-    mobileMenuBtn.addEventListener('click', function() {
-        const isOpen = !mobileMenu.classList.contains('hidden');
+        container.appendChild(symbol);
         
-        if (isOpen) {
-            mobileMenu.classList.add('hidden');
-            menuIcon.classList.remove('hidden');
-            closeIcon.classList.add('hidden');
-        } else {
-            mobileMenu.classList.remove('hidden');
-            mobileMenu.classList.add('show');
-            menuIcon.classList.add('hidden');
-            closeIcon.classList.remove('hidden');
-        }
-    });
-
-    // Close mobile menu when clicking nav links
-    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-    mobileNavLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            mobileMenu.classList.add('hidden');
-            menuIcon.classList.remove('hidden');
-            closeIcon.classList.add('hidden');
-        });
-    });
-}
-
-// Contact form functionality
-function initializeContactForm() {
-    const form = document.getElementById('contact-form');
-    const submitBtn = document.getElementById('submit-btn');
-    
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        if (validateForm()) {
-            submitForm();
-        }
-    });
-    
-    // Real-time validation
-    const inputs = form.querySelectorAll('input, textarea');
-    inputs.forEach(input => {
-        input.addEventListener('blur', function() {
-            validateField(this);
-        });
-        
-        input.addEventListener('input', function() {
-            clearFieldError(this);
-        });
-    });
-}
-
-// Form validation
-function validateForm() {
-    const name = document.getElementById('name');
-    const email = document.getElementById('email');
-        // Small hero micro-interactions: tilt mockup and nav highlight
-        function initializeHeroMicroInteractions() {
-            // tilt for mockup card (subtle 3D on mouse move)
-            const mockup = document.querySelector('.mockup-card .device-frame');
-            if (mockup) {
-                mockup.addEventListener('mousemove', (e) => {
-                    const rect = mockup.getBoundingClientRect();
-                    const x = (e.clientX - rect.left) / rect.width - 0.5;
-                    const y = (e.clientY - rect.top) / rect.height - 0.5;
-                    const rotateX = (y * 6).toFixed(2);
-                    const rotateY = (x * -10).toFixed(2);
-                    mockup.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(0)`;
-                });
-
-                mockup.addEventListener('mouseleave', () => {
-                    mockup.style.transform = '';
-                });
+        setTimeout(() => {
+            if (symbol.parentNode) {
+                symbol.parentNode.removeChild(symbol);
             }
-
-            // reveal floating badges with stagger
-            const floats = document.querySelectorAll('.mockup-card .floating-card');
-            floats.forEach((f, i) => {
-                try {
-                    f.style.opacity = '0';
-                    const current = window.getComputedStyle(f).transform;
-                    f.style.transform = (current === 'none' ? '' : current) + ' translateY(6px)';
-                    setTimeout(() => {
-                        f.style.transition = 'all 420ms cubic-bezier(.2,.9,.2,1)';
-                        f.style.opacity = '1';
-                        f.style.transform = (f.style.transform || '').replace(' translateY(6px)', '');
-                    }, 220 + i * 120);
-                } catch (err) {
-                    // ignore if styles can't be applied
-                }
-            });
-
-            // nav active highlighting on scroll
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = Array.from(document.querySelectorAll('.nav-link'));
-            function onScroll() {
-                const scrollPos = window.scrollY + 120;
-                sections.forEach(section => {
-                    if (section.offsetTop <= scrollPos && (section.offsetTop + section.offsetHeight) > scrollPos) {
-                        navLinks.forEach(l => l.classList.remove('active'));
-                        const link = navLinks.find(l => l.getAttribute('onclick') && l.getAttribute('onclick').includes(`'${section.id}'`));
-                        if (link) link.classList.add('active');
-                    }
-                });
-            }
-            window.addEventListener('scroll', onScroll);
-            onScroll();
-        }
-    return emailRegex.test(email);
-}
-
-// Form submission
-async function submitForm() {
-    const submitBtn = document.getElementById('submit-btn');
-    const originalContent = submitBtn.innerHTML;
+        }, 25000);
+    }
     
-    // Show loading state
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = `
-        <div class="spinner"></div>
-        Sending...
+    // Create symbols periodically
+    setInterval(createSymbol, 3000);
+    
+    // Add CSS for symbol animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes symbolFloat {
+            0% { 
+                transform: translateY(0) rotate(0deg); 
+                opacity: 0; 
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { 
+                transform: translateY(-${window.innerHeight + 100}px) rotate(360deg); 
+                opacity: 0; 
+            }
+        }
     `;
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Show success message
-    alert('Thank you for your message! I\'ll get back to you soon.');
-    
-    // Reset form
-    document.getElementById('contact-form').reset();
-    
-    // Reset button
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = originalContent;
+    document.head.appendChild(style);
 }
 
-// Navigation functions
-function scrollToSection(sectionId) {
-    const element = document.getElementById(sectionId);
-    if (element) {
-        const headerHeight = 80;
-        const elementPosition = element.offsetTop - headerHeight;
-        
-        window.scrollTo({
-            top: elementPosition,
-            behavior: 'smooth'
-        });
-    }
-}
-
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-// Modal functions
-function openModal(projectId) {
-    const project = portfolioProjects.find(p => p.id === projectId);
-    if (!project) return;
-    
-    const modal = document.getElementById('project-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalCategory = document.getElementById('modal-category');
-    const modalImage = document.getElementById('modal-image');
-    const modalDescription = document.getElementById('modal-description');
-    const modalTechnologies = document.getElementById('modal-technologies');
-    
-    modalTitle.textContent = project.title;
-    modalCategory.textContent = project.category;
-    modalImage.src = project.image;
-    modalImage.alt = project.title;
-    modalDescription.textContent = project.description;
-    
-    modalTechnologies.innerHTML = project.technologies.map(tech => 
-        `<span class="bg-teal-50 text-teal-700 px-3 py-1 rounded-full text-sm">${tech}</span>`
-    ).join('');
-    
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeModal() {
-    const modal = document.getElementById('project-modal');
-    modal.classList.add('hidden');
-    document.body.style.overflow = 'auto';
-}
-
-// Close modal when clicking outside
-document.getElementById('project-modal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeModal();
-    }
-});
-
-// CV download function
-function downloadCV() {
-    // In a real implementation, this would download the actual CV file
-    alert('CV download would start here. Please add your actual CV file to the project.');
-}
-
-// Set current year in footer
-function setCurrentYear() {
-    document.getElementById('current-year').textContent = new Date().getFullYear();
-}
-
-// Initialize animations
-function initializeAnimations() {
+// Scroll animations
+function initScrollAnimations() {
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
-    
-    const observer = new IntersectionObserver(function(entries) {
+
+    const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
+                entry.target.classList.add('revealed');
+                
+                // Special handling for skill circles
+                if (entry.target.classList.contains('skill-item')) {
+                    animateSkillCircle(entry.target);
+                }
+                
+                // Special handling for about section
+                if (entry.target.classList.contains('about-image')) {
+                    animateAboutImage(entry.target);
+                }
+                
+                // Special handling for timeline items
+                if (entry.target.classList.contains('timeline-item')) {
+                    animateTimelineItem(entry.target);
+                }
             }
         });
     }, observerOptions);
-    
-    // Add fade-in class to sections
-    const sections = document.querySelectorAll('section');
-    sections.forEach(section => {
-        section.classList.add('fade-in');
-        observer.observe(section);
+
+    // Observe elements for scroll animations
+    const elementsToObserve = [
+        '.service-card',
+        '.skill-item',
+        '.project-card',
+        '.contact-item',
+        '.section-title',
+        '.section-subtitle',
+        '.about-image',
+        '.timeline-item',
+        '.highlight-item'
+    ];
+
+    elementsToObserve.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach((el, index) => {
+            el.classList.add('scroll-reveal');
+            el.style.transitionDelay = `${index * 0.1}s`;
+            observer.observe(el);
+        });
     });
 }
 
-// Keyboard navigation
-document.addEventListener('keydown', function(e) {
-    // Close modal with Escape key
-    if (e.key === 'Escape') {
-        closeModal();
+// Skill circles animation
+function initSkillCircles() {
+    function animateSkillCircle(skillItem) {
+        const circle = skillItem.querySelector('.skill-circle');
+        const percentage = circle.getAttribute('data-percentage');
+        
+        if (!percentage) return;
+        
+        const degree = (percentage / 100) * 360;
+        const colors = [
+            'var(--primary-color)',
+            'var(--secondary-color)',
+            'var(--accent-color)',
+            'var(--success-color)'
+        ];
+        
+        const randomColor1 = colors[Math.floor(Math.random() * colors.length)];
+        const randomColor2 = colors[Math.floor(Math.random() * colors.length)];
+        
+        setTimeout(() => {
+            circle.style.background = `conic-gradient(${randomColor1} ${degree}deg, ${randomColor2} ${degree}deg, var(--bg-tertiary) ${degree}deg)`;
+        }, 300);
     }
-});
 
-// Smooth scroll polyfill for older browsers
-if (!('scrollBehavior' in document.documentElement.style)) {
-    const smoothScrollPolyfill = function(target) {
-        const startPosition = window.pageYOffset;
-        const targetPosition = target.offsetTop - 80;
-        const distance = targetPosition - startPosition;
-        const duration = 1000;
-        let start = null;
+    // Manual animation for already visible skill circles
+    window.animateSkillCircle = animateSkillCircle;
+}
+
+// About image animation
+function animateAboutImage(imageContainer) {
+    const floatingIcons = imageContainer.querySelectorAll('.floating-icon');
+    floatingIcons.forEach((icon, index) => {
+        setTimeout(() => {
+            icon.style.animation = `floatIcon 4s ease-in-out infinite ${index * -1.5}s, 
+                                   iconAppear 0.6s ease-out forwards`;
+        }, index * 200);
+    });
+}
+
+// Timeline animation
+function animateTimelineItem(item) {
+    const dot = item.querySelector('::before');
+    setTimeout(() => {
+        item.style.transform = 'translateX(0)';
+        item.style.opacity = '1';
+    }, 100);
+}
+
+// Project filters
+function initProjectFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+
+    if (!filterButtons.length || !projectCards.length) return;
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const filter = button.getAttribute('data-filter');
+            
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            // Filter projects with animation
+            projectCards.forEach((card, index) => {
+                const category = card.getAttribute('data-category');
+                
+                setTimeout(() => {
+                    if (filter === 'all' || category === filter) {
+                        card.classList.remove('hidden');
+                        card.style.animationDelay = `${index * 0.1}s`;
+                        card.style.animation = 'projectSlideIn 0.6s ease-out forwards';
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                }, index * 50);
+            });
+        });
+    });
+}
+
+// Advanced animations
+function initAdvancedAnimations() {
+    // Parallax effect for hero section
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const heroVisual = document.querySelector('.hero-visual');
+        const particles = document.getElementById('particles');
         
-        function animation(currentTime) {
-            if (start === null) start = currentTime;
-            const timeElapsed = currentTime - start;
-            const run = ease(timeElapsed, startPosition, distance, duration);
-            window.scrollTo(0, run);
-            if (timeElapsed < duration) requestAnimationFrame(animation);
+        if (heroVisual) {
+            heroVisual.style.transform = `translateY(${scrolled * 0.1}px)`;
         }
         
-        function ease(t, b, c, d) {
-            t /= d / 2;
-            if (t < 1) return c / 2 * t * t + b;
-            t--;
-            return -c / 2 * (t * (t - 2) - 1) + b;
+        if (particles) {
+            particles.style.transform = `translateY(${scrolled * 0.05}px)`;
         }
-        
-        requestAnimationFrame(animation);
-    };
+    });
     
-    // Override scrollToSection for older browsers
-    window.scrollToSection = function(sectionId) {
-        const element = document.getElementById(sectionId);
-        if (element) {
-            smoothScrollPolyfill(element);
+    // Magnetic effect for buttons
+    const magneticElements = document.querySelectorAll('.btn-primary, .btn-secondary, .hire-btn');
+    magneticElements.forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            el.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+        });
+        
+        el.addEventListener('mouseleave', () => {
+            el.style.transform = 'translate(0, 0)';
+        });
+    });
+    
+    // Typing effect for hero subtitle
+    const subtitle = document.querySelector('.hero-subtitle');
+    if (subtitle) {
+        const text = subtitle.textContent;
+        subtitle.textContent = '';
+        
+        setTimeout(() => {
+            typeWriter(subtitle, text, 100);
+        }, 1500);
+    }
+    
+    // Glitch effect on hover for logo
+    const logo = document.querySelector('.logo');
+    if (logo) {
+        logo.addEventListener('mouseenter', () => {
+            logo.style.animation = 'glitch 0.3s ease-in-out';
+        });
+        
+        logo.addEventListener('animationend', () => {
+            logo.style.animation = '';
+        });
+    }
+    
+    // Ripple effect for service cards
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach(card => {
+        card.addEventListener('click', createRipple);
+    });
+}
+
+// Typewriter effect
+function typeWriter(element, text, speed) {
+    let i = 0;
+    function type() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    type();
+}
+
+// Ripple effect
+function createRipple(e) {
+    const card = e.currentTarget;
+    const ripple = document.createElement('span');
+    const rect = card.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+    
+    ripple.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        left: ${x}px;
+        top: ${y}px;
+        background: rgba(64, 217, 255, 0.3);
+        border-radius: 50%;
+        transform: scale(0);
+        animation: ripple 0.6s ease-out;
+        pointer-events: none;
+        z-index: 1;
+    `;
+    
+    card.style.position = 'relative';
+    card.appendChild(ripple);
+    
+    setTimeout(() => {
+        ripple.remove();
+    }, 600);
+}
+
+// Contact form
+function initContactForm() {
+    const form = document.querySelector('.contact-form');
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        
+        // Show loading state
+        submitBtn.textContent = 'Sending...';
+        submitBtn.disabled = true;
+        
+        // Simulate form submission (replace with actual form handling)
+        try {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Show success message
+            showNotification('Message sent successfully!', 'success');
+            form.reset();
+        } catch (error) {
+            showNotification('Failed to send message. Please try again.', 'error');
+        } finally {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Form validation
+    const inputs = form.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('blur', validateInput);
+        input.addEventListener('input', clearValidation);
+    });
+}
+
+// Input validation
+function validateInput(e) {
+    const input = e.target;
+    const value = input.value.trim();
+    
+    // Remove existing validation classes
+    input.classList.remove('valid', 'invalid');
+    
+    if (input.hasAttribute('required') && !value) {
+        input.classList.add('invalid');
+        return false;
+    }
+    
+    if (input.type === 'email' && value) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+            input.classList.add('invalid');
+            return false;
+        }
+    }
+    
+    if (value) {
+        input.classList.add('valid');
+    }
+    
+    return true;
+}
+
+function clearValidation(e) {
+    e.target.classList.remove('valid', 'invalid');
+}
+
+// Notification system
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        z-index: 9999;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        ${type === 'success' ? 'background: var(--success-color);' : ''}
+        ${type === 'error' ? 'background: var(--error-color);' : ''}
+        ${type === 'info' ? 'background: var(--primary-color);' : ''}
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
+
+// Typing animation for code snippet
+function initTypingAnimation() {
+    const codeLines = document.querySelectorAll('.code-line .code');
+    if (!codeLines.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                typeText(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    codeLines.forEach((line, index) => {
+        const text = line.innerHTML;
+        line.innerHTML = '';
+        line.setAttribute('data-text', text);
+        
+        setTimeout(() => {
+            observer.observe(line);
+        }, index * 200);
+    });
+}
+
+function typeText(element) {
+    const text = element.getAttribute('data-text');
+    if (!text) return;
+    
+    let index = 0;
+    const speed = 30;
+    
+    function type() {
+        if (index < text.length) {
+            element.innerHTML = text.substring(0, index + 1);
+            index++;
+            setTimeout(type, speed);
+        }
+    }
+    
+    type();
+}
+
+// Smooth scrolling
+function initSmoothScrolling() {
+    const links = document.querySelectorAll('a[href^="#"]');
+    
+    links.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            const targetId = link.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                const headerOffset = 80;
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+}
+
+// Utility functions
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
         }
     };
 }
+
+// Performance optimizations
+const debouncedResize = debounce(() => {
+    // Handle resize events
+    console.log('Window resized');
+}, 250);
+
+const throttledScroll = throttle(() => {
+    // Handle scroll events
+    isScrolling = true;
+    setTimeout(() => {
+        isScrolling = false;
+    }, 100);
+}, 16);
+
+window.addEventListener('resize', debouncedResize);
+window.addEventListener('scroll', throttledScroll);
+
+// Add loading animation
+window.addEventListener('load', () => {
+    document.body.classList.add('loading');
+    
+    // Animate elements on load
+    setTimeout(() => {
+        const heroElements = document.querySelectorAll('.hero-content > *');
+        heroElements.forEach((el, index) => {
+            el.style.animationDelay = `${index * 0.2}s`;
+            el.classList.add('fade-in-up');
+        });
+    }, 500);
+});
+
+// Add CSS classes for animations
+const style = document.createElement('style');
+style.textContent = `
+    .animate-in {
+        animation: slideInUp 0.8s ease-out both;
+    }
+    
+    .fade-in-up {
+        animation: fadeInUp 0.6s ease forwards;
+    }
+    
+    @keyframes ripple {
+        to {
+            transform: scale(2);
+            opacity: 0;
+        }
+    }
+    
+    @keyframes glitch {
+        0%, 100% { transform: translate(0); }
+        20% { transform: translate(-2px, 2px); }
+        40% { transform: translate(-2px, -2px); }
+        60% { transform: translate(2px, 2px); }
+        80% { transform: translate(2px, -2px); }
+    }
+    
+    @keyframes iconAppear {
+        from {
+            opacity: 0;
+            transform: scale(0) rotate(180deg);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+    }
+    
+    .notification {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .contact-form input.valid,
+    .contact-form textarea.valid {
+        border-color: var(--success-color);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    
+    .contact-form input.invalid,
+    .contact-form textarea.invalid {
+        border-color: var(--error-color);
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+    
+    .skill-circle {
+        transition: background 0.8s ease-in-out;
+    }
+    
+    @media (max-width: 768px) {
+        .nav-menu.active {
+            display: flex;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: var(--bg-secondary);
+            flex-direction: column;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+    }
+`;
+document.head.appendChild(style);
+
+// Console styling for developers
+console.log(
+    '%c🚀 Flutter Developer Portfolio',
+    'color: #40D9FF; font-size: 16px; font-weight: bold;'
+);
+
+console.log(
+    '%cBuilt with ❤️ using HTML, CSS & JavaScript',
+    'color: #FF6B35; font-size: 12px;'
+);
+
+// Easter egg - Konami code
+let konamiCode = [];
+const konamiSequence = [
+    'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
+    'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
+    'KeyB', 'KeyA'
+];
+
+document.addEventListener('keydown', (e) => {
+    konamiCode.push(e.code);
+    
+    if (konamiCode.length > konamiSequence.length) {
+        konamiCode.shift();
+    }
+    
+    if (JSON.stringify(konamiCode) === JSON.stringify(konamiSequence)) {
+        showNotification('🎉 Konami Code activated! You found the easter egg!', 'success');
+        
+        // Add some fun effects
+        const particles = document.querySelectorAll('.particle');
+        particles.forEach(particle => {
+            particle.style.background = '#FFD700';
+            particle.style.boxShadow = '0 0 20px #FFD700';
+        });
+        
+        konamiCode = [];
+    }
+});
+
+// Export functions for external use
+window.portfolioUtils = {
+    showNotification,
+    initParticles,
+    createRipple,
+    typeWriter,
+    debounce,
+    throttle
+};
