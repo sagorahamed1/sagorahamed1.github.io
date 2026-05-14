@@ -775,12 +775,12 @@ document.head.appendChild(style);
 
 // Console styling for developers
 console.log(
-    '%c🚀 Flutter Developer Portfolio',
+    '%c🚀 Mofiz Uddin Sagor — Flutter Developer Portfolio',
     'color: #40D9FF; font-size: 16px; font-weight: bold;'
 );
 
 console.log(
-    '%cBuilt with ❤️ using HTML, CSS & JavaScript',
+    '%cBuilt with love using HTML, CSS & JavaScript',
     'color: #FF6B35; font-size: 12px;'
 );
 
