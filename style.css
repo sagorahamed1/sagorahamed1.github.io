@@ -252,11 +252,19 @@ ul { list-style: none; }
   gap: 8px;
 }
 
-.avatar-initials {
-  font-size: 1.6rem;
-  font-weight: 800;
+.avatar-letter {
+  font-size: 5rem;
+  font-weight: 900;
   color: var(--blue);
-  letter-spacing: 3px;
+  line-height: 1;
+}
+
+.avatar-name {
+  font-size: .95rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.55);
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 /* ─── STATS BAR ─── */
@@ -297,12 +305,12 @@ ul { list-style: none; }
 }
 
 /* ─── SECTIONS ─── */
-.section { padding: 90px 0; }
+.section { padding: 60px 0; }
 .section-alt { background: var(--bg-alt); }
 
 .section-header {
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 }
 
 .section-header h2 {
@@ -820,8 +828,8 @@ ul { list-style: none; }
 
   .exp-body { flex-direction: column; }
 
-  .section { padding: 64px 0; }
-  .section-header { margin-bottom: 40px; }
+  .section { padding: 48px 0; }
+  .section-header { margin-bottom: 32px; }
 }
 
 @media (max-width: 480px) {
